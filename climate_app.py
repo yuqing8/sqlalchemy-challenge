@@ -68,7 +68,6 @@ def start_tobs(start):
     session.close()
     return jsonify(list(stats_start))
 
-@app.route("/api/v1.0/<start>/<end>")
 
 @app.route("/api/v1.0/<start_date>/<end_date>")
 def temp_by_start_end(start_date,end_date):

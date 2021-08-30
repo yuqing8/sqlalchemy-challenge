@@ -64,19 +64,19 @@ def tobs():
 def start_tobs(start):
     session=Session(engine)
     stats_start=session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
-        filter(Measurement.date>=start).group_by(Measurement.date).\
-        all()
+        filter(Measurement.date>=start).first()
     session.close()
-    return jsonify(stats_start)
+    return jsonify(list(stats_start))
 
 @app.route("/api/v1.0/<start>/<end>")
 
 @app.route("/api/v1.0/<start_date>/<end_date>")
 def temp_by_start_end(start_date,end_date):
     session = Session(engine)
-    time_stats = session.query(Measurement.date,func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs)).filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).group_by(Measurement.date).all()
+    time_stats = session.query(func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs)).\
+    filter((Measurement.date >= start_date)&(Measurement.date <= end_date)).first()
     session.close()
-    return jsonify(time_stats)
+    return jsonify(list(time_stats))
 
 if __name__ == "__main__":
     app.run(debug=True)
